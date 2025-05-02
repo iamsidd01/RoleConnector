@@ -1,0 +1,55 @@
+{
+  "sorted_middleware": [],
+  "middleware": {
+    "/": {
+      "files": [
+        "server/edge/chunks/_a1b8b59d._.js",
+        "server/edge/chunks/[root of the server]__10ae24bd._.js",
+        "server/edge/chunks/edge-wrapper_321a5c3e.js"
+      ],
+      "name": "middleware",
+      "page": "/",
+      "matchers": [
+        {
+          "regexp": "/:nextData(_next/data/[^/]{1,})?/((?!api|_next/static|_next/image|favicon.ico).*){(\\\\.json)}?",
+          "originalSource": "/((?!api|_next/static|_next/image|favicon.ico).*)"
+        },
+        {
+          "regexp": "/:nextData(_next/data/[^/]{1,})?/buyer-dashboard/:path*{(\\\\.json)}?",
+          "originalSource": "/buyer-dashboard/:path*"
+        },
+        {
+          "regexp": "/:nextData(_next/data/[^/]{1,})?/supplier-dashboard/:path*{(\\\\.json)}?",
+          "originalSource": "/supplier-dashboard/:path*"
+        },
+        {
+          "regexp": "/:nextData(_next/data/[^/]{1,})?/transporter-dashboard/:path*{(\\\\.json)}?",
+          "originalSource": "/transporter-dashboard/:path*"
+        },
+        {
+          "regexp": "/:nextData(_next/data/[^/]{1,})?/driver-dashboard/:path*{(\\\\.json)}?",
+          "originalSource": "/driver-dashboard/:path*"
+        },
+        {
+          "regexp": "/:nextData(_next/data/[^/]{1,})?/login{(\\\\.json)}?",
+          "originalSource": "/login"
+        },
+        {
+          "regexp": "/:nextData(_next/data/[^/]{1,})?/register{(\\\\.json)}?",
+          "originalSource": "/register"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "development",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "SHNK5bJxbOel62pYMPsdpr5D1/gkjEwk45voDpx65A4=",
+        "__NEXT_PREVIEW_MODE_ID": "4b0756dc5209ed9910351e09a8446c17",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "c71d9ed36dc3366305e7232d13e96d5c11a50781f7d3c7814612bd8744b46e40",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "49b6391ecc37c687742df6ff3f05a1ec412aef5df04bc752077a22037b4287ae"
+      }
+    }
+  },
+  "instrumentation": null,
+  "functions": {}
+}
