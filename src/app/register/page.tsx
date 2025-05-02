@@ -62,9 +62,12 @@ async function registerUser(data: RegistrationInput): Promise<{ success: boolean
 
 export default function RegisterPage(): ReactElement {
   const [selectedRole, setSelectedRole] = useState<Role | ''>('');
+  const [formKey, setFormKey] = useState(0); // Key to force form re-render on role change
   const { toast } = useToast();
   const router = useRouter();
 
+  // Determine the schema based on the selected role.
+  // This needs to be recalculated whenever selectedRole changes.
   const currentSchema =
     selectedRole === 'buyer'
       ? buyerSchema
@@ -74,7 +77,7 @@ export default function RegisterPage(): ReactElement {
           ? transporterSchema
           : selectedRole === 'driver'
             ? driverSchema
-            : registrationSchema; // Fallback to base or combined schema if needed initially
+            : registrationSchema; // Fallback schema
 
   const form = useForm<RegistrationInput>({
     resolver: zodResolver(currentSchema),
@@ -83,7 +86,7 @@ export default function RegisterPage(): ReactElement {
       phone: '',
       password: '',
       confirmPassword: '',
-      role: selectedRole || undefined, // Initialize role based on state
+      role: selectedRole || undefined,
       // Role specific fields (initialize to empty or undefined)
       companyName: '',
       contactPerson: '',
@@ -136,15 +139,16 @@ export default function RegisterPage(): ReactElement {
      const newRole = value as Role | '';
      setSelectedRole(newRole);
      // Reset form values when role changes to avoid carrying over invalid data
-     // Keep common fields like email, phone, password
-     const currentValues = form.getValues();
+     // Keep common fields like email, phone, password if desired, but reset specifics
+     const currentValues = form.getValues(); // Get current common values if needed
      form.reset({
-        email: currentValues.email,
-        phone: currentValues.phone,
-        password: currentValues.password,
-        confirmPassword: currentValues.confirmPassword,
-        role: newRole || undefined,
-        // Reset role-specific fields
+        // Keep common fields if needed, or reset all for a clean slate
+        email: '', // Resetting all for simplicity
+        phone: '',
+        password: '',
+        confirmPassword: '',
+        role: newRole || undefined, // Set the new role
+        // Reset role-specific fields explicitly
         companyName: '',
         contactPerson: '',
         businessAddress: '',
@@ -162,7 +166,19 @@ export default function RegisterPage(): ReactElement {
         licenseNumber: '',
         experienceYears: undefined,
         vehicleDetails: '',
+     }, {
+        // Keep form state like errors and touched status if desired, or reset them too
+        // keepErrors: false,
+        // keepDirty: false,
+        // keepValues: false,
+        // keepDefaultValues: false,
+        // keepIsSubmitted: false,
+        // keepTouched: false,
+        // keepIsValid: false,
+        // keepSubmitCount: false,
      });
+     // Increment the key to force remounting the Form component and re-initializing useForm
+     setFormKey(prevKey => prevKey + 1);
   };
 
   return (
@@ -177,7 +193,8 @@ export default function RegisterPage(): ReactElement {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
+          {/* Use the formKey here to trigger re-render */}
+          <Form {...form} key={formKey}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               {/* Role Selection */}
               <FormField
@@ -188,11 +205,12 @@ export default function RegisterPage(): ReactElement {
                     <FormLabel>Select Your Role *</FormLabel>
                     <Select
                       onValueChange={(value) => {
-                        field.onChange(value); // Update form state
-                        handleRoleChange(value); // Update local state and reset fields
+                        // field.onChange(value); // RHF handles this via form.reset now
+                        handleRoleChange(value); // Update local state and reset/remount form
                       }}
-                      defaultValue={field.value}
-                      value={selectedRole} // Controlled component
+                      // Use selectedRole directly as value since form state is reset
+                      value={selectedRole}
+                      // defaultValue={field.value} // defaultValue might interfere with reset
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -455,7 +473,7 @@ export default function RegisterPage(): ReactElement {
                       <FormItem>
                         <FormLabel>Fleet Size *</FormLabel>
                         <FormControl>
-                           <Input type="number" placeholder="10" {...field} />
+                           <Input type="number" placeholder="10" {...field} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} value={field.value ?? ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -525,7 +543,7 @@ export default function RegisterPage(): ReactElement {
                       <FormItem>
                         <FormLabel>Experience (Years) *</FormLabel>
                         <FormControl>
-                           <Input type="number" placeholder="5" {...field} />
+                           <Input type="number" placeholder="5" {...field} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} value={field.value ?? ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
